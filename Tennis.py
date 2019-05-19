@@ -4,6 +4,7 @@ canvasWidth = 750
 canvasHeight = 500
 window = tkinter.Tk()
 canvas = tkinter.Canvas(window, width = canvasWidth, height = canvasHeight, bg = "dodgerblue4")
+canvas.pack()
 bat = canvas.create_rectangle(0,0,40,10, fill = "dark turquoise")
 ball = canvas.create_oval(0,0,10,10, fill = "deep pink")
 windowOpen = True
@@ -43,7 +44,7 @@ setBatTop = canvasHeight - 40
 setBatBottom = canvasHeight - 30
 def move_ball():
     global ballMoveX, ballMoveY,score,bounceCount,batSpeed
-    (ballLeft, balltop, ballright, ballBottom) = canvas.coords(ball)
+    (ballLeft, ballTop, ballRight, ballBottom) = canvas.coords(ball)
     if ballMoveX > 0 and ballRight > canvasWidth:
         ballMoveX = -ballMoveX
     if ballMoveX < 0 and ballLeft < 0:
@@ -52,8 +53,7 @@ def move_ball():
         ballMoveY = -ballMoveY
     if ballMoveY > 0 and ballBottom > setBatTop and ballBottom < setBatBottom:
         (batLeft, batTop, batRight, batBottom) = canvas.coords(bat)
-        if(ballMoveX > 0 and (ballRight + ballMoveX > batLeft and ballLeft < batRight)
-           or ballSpeedX < 0 and (ballRight > batLeft and ballLeft + ballMoveX < batRight)):
+        if(ballMoveX > 0 and (ballRight + ballMoveX > batLeft and ballLeft < batRight) or ballMoveX < 0 and (ballRight > batLeft and ballLeft + ballMoveX < batRight)):
             ballMoveY = -ballMoveY
             score = score + 1
             bounceCount = bounceCount + 1
@@ -65,13 +65,13 @@ def move_ball():
                 else:
                     ballMoveX = ballMoveY - 1
                 ballMoveY = ballMoveY - 1
-    canvas.move(ball, ballMove,ballMoveY)
+    canvas.move(ball, ballMoveX,ballMoveY)
 def check_game_over():
     (ballLeft, ballTop, ballRight, ballBottom) = canvas.coords(ball)
     if ballTop > canvasHeight:
         print("Your score was " + str(score))
         playAgain = tkinter.messagebox.askyesno(message="Do you wont to play again?")
-        if playAgain == true:
+        if playAgain == True:
             reset()
         else:
             close()
@@ -83,15 +83,15 @@ def reset():
     global score, bounceCount, batSpeed
     global leftPressed, rightPressed
     global ballMoveX, ballMoveY
-    bounceCount = 0
-    batSpeed = 6
     leftPressed = 0
     rightPressed = 0
     ballMoveX = 4
     ballMoveY = -4
     canvas.coords(bat,10,setBatTop,50,setBatBottom)
-    canvas.coords(bat,20,setBatTop-10,30,setBatTop)
+    canvas.coords(ball,20,setBatTop-10,30,setBatTop)
     score = 0
+    bounceCount = 0
+    batSpeed = 6
 window.protocol("WM_DELETE_WINDOW",close)
 window.bind("<KeyPress>",on_key_press)
 window.bind("<KeyRelease>",on_key_release)
